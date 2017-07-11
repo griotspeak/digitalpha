@@ -11,26 +11,81 @@ import XCTest
 
 class DigitalphaTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testCardinalSpelledOutWithDefaultConnector() {
+        XCTAssertEqual(0.cardinalStringSpelledOut(), "zero")
+        XCTAssertEqual(1.cardinalStringSpelledOut(), "one")
+        XCTAssertEqual(2.cardinalStringSpelledOut(), "two")
+        XCTAssertEqual(3.cardinalStringSpelledOut(), "three")
+        XCTAssertEqual(4.cardinalStringSpelledOut(), "four")
+        XCTAssertEqual(5.cardinalStringSpelledOut(), "five")
+        XCTAssertEqual(6.cardinalStringSpelledOut(), "six")
+        XCTAssertEqual(7.cardinalStringSpelledOut(), "seven")
+        XCTAssertEqual(8.cardinalStringSpelledOut(), "eight")
+        XCTAssertEqual(9.cardinalStringSpelledOut(), "nine")
+        XCTAssertEqual(10.cardinalStringSpelledOut(), "ten")
+        XCTAssertEqual(11.cardinalStringSpelledOut(), "eleven")
+        XCTAssertEqual(12.cardinalStringSpelledOut(), "twelve")
+        XCTAssertEqual(13.cardinalStringSpelledOut(), "thirteen")
+        XCTAssertEqual(14.cardinalStringSpelledOut(), "fourteen")
+        XCTAssertEqual(15.cardinalStringSpelledOut(), "fifteen")
+        XCTAssertEqual(16.cardinalStringSpelledOut(), "sixteen")
+        XCTAssertEqual(17.cardinalStringSpelledOut(), "seventeen")
+        XCTAssertEqual(18.cardinalStringSpelledOut(), "eighteen")
+        XCTAssertEqual(19.cardinalStringSpelledOut(), "nineteen")
+        XCTAssertEqual(20.cardinalStringSpelledOut(), "twenty")
+        XCTAssertEqual(21.cardinalStringSpelledOut(), "twenty-one")
+        XCTAssertEqual(22.cardinalStringSpelledOut(), "twenty-two")
+        XCTAssertEqual(23.cardinalStringSpelledOut(), "twenty-three")
+        XCTAssertEqual(24.cardinalStringSpelledOut(), "twenty-four")
+        XCTAssertEqual(25.cardinalStringSpelledOut(), "twenty-five")
+        XCTAssertEqual(26.cardinalStringSpelledOut(), "twenty-six")
+        XCTAssertEqual(27.cardinalStringSpelledOut(), "twenty-seven")
+        XCTAssertEqual(28.cardinalStringSpelledOut(), "twenty-eight")
+        XCTAssertEqual(29.cardinalStringSpelledOut(), "twenty-nine")
+        XCTAssertEqual(30.cardinalStringSpelledOut(), "thirty")
+        XCTAssertEqual(31.cardinalStringSpelledOut(), "thirty-one")
+        XCTAssertEqual(32.cardinalStringSpelledOut(), "thirty-two")
+        XCTAssertEqual(40.cardinalStringSpelledOut(), "forty")
+        XCTAssertEqual(50.cardinalStringSpelledOut(), "fifty")
+        XCTAssertEqual(60.cardinalStringSpelledOut(), "sixty")
+        XCTAssertEqual(70.cardinalStringSpelledOut(), "seventy")
+        XCTAssertEqual(80.cardinalStringSpelledOut(), "eighty")
+        XCTAssertEqual(87.cardinalStringSpelledOut(), "eighty-seven")
+        XCTAssertEqual(90.cardinalStringSpelledOut(), "ninety")
+        XCTAssertEqual(100.cardinalStringSpelledOut(), "one hundred")
+        XCTAssertEqual(101.cardinalStringSpelledOut(), "one hundred and one")
+        XCTAssertEqual(110.cardinalStringSpelledOut(), "one hundred and ten")
+        XCTAssertEqual(111.cardinalStringSpelledOut(), "one hundred and eleven")
+        XCTAssertEqual(120.cardinalStringSpelledOut(), "one hundred and twenty")
+        XCTAssertEqual(121.cardinalStringSpelledOut(), "one hundred and twenty-one")
+        XCTAssertEqual(144.cardinalStringSpelledOut(), "one hundred and forty-four")
+        XCTAssertEqual(200.cardinalStringSpelledOut(), "two hundred")
+        XCTAssertEqual(300.cardinalStringSpelledOut(), "three hundred")
+        XCTAssertEqual(400.cardinalStringSpelledOut(), "four hundred")
+        XCTAssertEqual(500.cardinalStringSpelledOut(), "five hundred")
+        XCTAssertEqual(600.cardinalStringSpelledOut(), "six hundred")
+        XCTAssertEqual(666.cardinalStringSpelledOut(), "six hundred and sixty-six")
+        XCTAssertEqual(700.cardinalStringSpelledOut(), "seven hundred")
+        XCTAssertEqual(777.cardinalStringSpelledOut(), "seven hundred and seventy-seven")
+        XCTAssertEqual(800.cardinalStringSpelledOut(), "eight hundred")
+        XCTAssertEqual(900.cardinalStringSpelledOut(), "nine hundred")
+        XCTAssertEqual(1000.cardinalStringSpelledOut(), "one thousand")
+        XCTAssertEqual(1001.cardinalStringSpelledOut(), "one thousand and one")
+        XCTAssertEqual(1010.cardinalStringSpelledOut(), "one thousand and ten")
+        XCTAssertEqual(1011.cardinalStringSpelledOut(), "one thousand and eleven")
+        XCTAssertEqual(1024.cardinalStringSpelledOut(), "one thousand and twenty-four")
+        XCTAssertEqual(1100.cardinalStringSpelledOut(), "one thousand one hundred")
+        XCTAssertEqual(1101.cardinalStringSpelledOut(), "one thousand one hundred and one")
+        XCTAssertEqual(1728.cardinalStringSpelledOut(), "one thousand seven hundred and twenty-eight")
+        XCTAssertEqual(2000.cardinalStringSpelledOut(), "two thousand")
+        XCTAssertEqual(3000.cardinalStringSpelledOut(), "three thousand")
+        XCTAssertEqual(10000.cardinalStringSpelledOut(), "ten thousand")
+        XCTAssertEqual(100000.cardinalStringSpelledOut(), "one hundred thousand")
+        XCTAssertEqual(500000.cardinalStringSpelledOut(), "five hundred thousand")
+        XCTAssertEqual(1000000.cardinalStringSpelledOut(), "one million")
+        XCTAssertEqual(1048576.cardinalStringSpelledOut(), "one million forty-eight thousand five hundred and seventy-six")
+        XCTAssertEqual(10000000.cardinalStringSpelledOut(), "ten million")
+        XCTAssertEqual(100000000.cardinalStringSpelledOut(), "one hundred million")
     }
     
 }

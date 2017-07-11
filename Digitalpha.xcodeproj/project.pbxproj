@@ -10,6 +10,7 @@
 		32809CC81F13288700C49751 /* Digitalpha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32809CBE1F13288700C49751 /* Digitalpha.framework */; };
 		32809CCD1F13288700C49751 /* DigitalphaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32809CCC1F13288700C49751 /* DigitalphaTests.swift */; };
 		32809CCF1F13288700C49751 /* Digitalpha.h in Headers */ = {isa = PBXBuildFile; fileRef = 32809CC11F13288700C49751 /* Digitalpha.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		32809CD91F1328A000C49751 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32809CD81F1328A000C49751 /* Main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		32809CC71F13288700C49751 /* DigitalphaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DigitalphaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32809CCC1F13288700C49751 /* DigitalphaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitalphaTests.swift; sourceTree = "<group>"; };
 		32809CCE1F13288700C49751 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		32809CD81F1328A000C49751 /* Main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				32809CC11F13288700C49751 /* Digitalpha.h */,
+				32809CD81F1328A000C49751 /* Main.swift */,
 				32809CC21F13288700C49751 /* Info.plist */,
 			);
 			path = Digitalpha;
@@ -149,6 +152,7 @@
 					32809CBD1F13288700C49751 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = K3S3BWK3L4;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					32809CC61F13288700C49751 = {
@@ -198,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32809CD91F1328A000C49751 /* Main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +329,7 @@
 		32809CD31F13288700C49751 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = K3S3BWK3L4;
@@ -336,6 +342,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.buttonsAndLights.Digitalpha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -343,6 +350,7 @@
 		32809CD41F13288700C49751 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = K3S3BWK3L4;
@@ -362,6 +370,7 @@
 		32809CD61F13288700C49751 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = K3S3BWK3L4;
 				INFOPLIST_FILE = DigitalphaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -374,6 +383,7 @@
 		32809CD71F13288700C49751 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = K3S3BWK3L4;
 				INFOPLIST_FILE = DigitalphaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

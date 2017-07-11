@@ -151,7 +151,7 @@ func pow(base: Int, exponent: Int) -> Double {
 extension Int {
 
 
-    public func cardinalStringSpelledOut(firstConnector: String = " and ") -> String {
+    public func cardinalStringSpelledOut(firstConnector: String = " ") -> String {
         guard self >= 0 else {
             return "negative \((-self).cardinalStringSpelledOut(firstConnector:firstConnector))"
         }

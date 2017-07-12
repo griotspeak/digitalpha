@@ -76,9 +76,7 @@ func extract(number: [Int], connector: String, accumulator: String, calls: inout
 
     switch key {
     case 1 where accumulator.isEmpty == false && scratch == 0:
-        var back = accumulator.trimmingCharacters(in: [" ", "-"])
-        back.append(" ")
-        return back
+        return accumulator.trimmingCharacters(in: [" ", "-"]) + " "
     case 1 where calls.subtracting([1, 10]).isEmpty == false:
         let back = accumulator.trimmingCharacters(in: [" "])
         return "\(back)\(connector)\(lookup[key]![scratch]!) "

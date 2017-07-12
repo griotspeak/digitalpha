@@ -175,8 +175,9 @@ extension Int {
     public func ordinalStringSpelledOut(specialConnector: String = " ") -> String {
         let source = cardinalStringSpelledOut()
         let comps = source.components(separatedBy: specialConnector).flatMap { $0.components(separatedBy: "-") }
-
-        let tail = comps.last!
+        guard let tail = comps.last else {
+            fatalError("splitting string faild. Array shouldn't be empty even when separator is not present.")
+        }
 
         switch tail {
         case "one":

@@ -7,127 +7,146 @@
 //
 
 import Foundation
+enum Spot {
+    case one
+    case ten
+    case hundred
+    case thousand
 
-var lookup: [Int:[String?]] {
-    return [
-        1:
-            ["zero",
-             "one",
-             "two",
-             "three",
-             "four",
-             "five",
-             "six",
-             "seven",
-             "eight",
-             "nine",
-             "ten",
-             "eleven",
-             "twelve",
-             "thirteen",
-             "fourteen",
-             "fifteen",
-             "sixteen",
-             "seventeen",
-             "eighteen",
-             "nineteen"],
-        10:
-            [nil,
-             nil,
-             "twenty",
-             "thirty",
-             "forty",
-             "fifty",
-             "sixty",
-             "seventy",
-             "eighty",
-             "ninety",
-             "hundred"],
-        1000:
-            [nil,
-             "thousand",
-             "million",
-             "billion",
-             "trillion",
-             "quadrillion",
-             "quintillion",
-             "sextillion",
-             "septillion",
-             "octillion",
-             "nonillion",
-             "decillion",
-             "undecillion",
-             "duodecillion",
-             "tredecillion",
-             "quattuordecillion",
-             "quindecillion",
-             "sexdecillion",
-             "septendecillion",
-             "octodecillion",
-             "novemdecillion",
-             "vigintillion"]]
+    init?(_ input: Int) {
+        switch input {
+        case 0...19:
+            self = .one
+        case 20...99:
+            self = .ten
+        case 100...999:
+            self = .hundred
+        default:
+            if input >= 1000 && Double(input) <= 0.1 * pow(base: 10, exponent: (1 + (Spot.thousand.values.count * 3))) {
+                self = .thousand
+            } else {
+                return nil
+            }
+        }
+    }
+
+    var values: [String?] {
+        switch self {
+        case .one:
+            return ["zero",
+                    "one",
+                    "two",
+                    "three",
+                    "four",
+                    "five",
+                    "six",
+                    "seven",
+                    "eight",
+                    "nine",
+                    "ten",
+                    "eleven",
+                    "twelve",
+                    "thirteen",
+                    "fourteen",
+                    "fifteen",
+                    "sixteen",
+                    "seventeen",
+                    "eighteen",
+                    "nineteen"]
+        case .ten:
+            return [nil,
+                    nil,
+                    "twenty",
+                    "thirty",
+                    "forty",
+                    "fifty",
+                    "sixty",
+                    "seventy",
+                    "eighty",
+                    "ninety"]
+        case .hundred:
+            return ["hundred"]
+        case .thousand:
+            return [nil,
+                    "thousand",
+                    "million",
+                    "billion",
+                    "trillion",
+                    "quadrillion",
+                    "quintillion",
+                    "sextillion",
+                    "septillion",
+                    "octillion",
+                    "nonillion",
+                    "decillion",
+                    "undecillion",
+                    "duodecillion",
+                    "tredecillion",
+                    "quattuordecillion",
+                    "quindecillion",
+                    "sexdecillion",
+                    "septendecillion",
+                    "octodecillion",
+                    "novemdecillion",
+                    "vigintillion"]
+        }
+    }
+
+    var rawValue: Int {
+        switch self {
+        case .one:
+            return 1
+        case .ten:
+            return 10
+        case .hundred:
+            return 100
+        case .thousand:
+            return 1000
+        }
+    }
 }
 
-func extract(number: [Int], connector: String, accumulator: String, calls: Set<Int>) -> (value: String, calls: Set<Int>) {
+func extract(number: [Int], connector: String, accumulator: String, calls: Set<Spot>) -> (value: String, calls: Set<Spot>) {
     let scratch = number[0]
-    let key = keyToUse(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
+    let key = Spot(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
+    let rawKey = key.rawValue
     let backCalls = calls.union([key])
 
     switch key {
-    case 1 where accumulator.isEmpty == false && scratch == 0:
+    case .one where accumulator.isEmpty == false && scratch == 0:
         return (accumulator.trimmingCharacters(in: [" ", "-"]) + " ", backCalls)
-    case 1 where backCalls.subtracting([1, 10]).isEmpty == false:
+    case .one where backCalls.subtracting([.one, .ten]).isEmpty == false:
         let back = accumulator.trimmingCharacters(in: [" "])
-        return ("\(back)\(connector)\(lookup[key]![scratch]!) ", backCalls)
-    case 1:
-        return ("\(accumulator)\(lookup[key]![scratch]!) ", backCalls)
-    case 10:
-        let count = (scratch - (scratch % key)) / key
-        let newNum = [(scratch - (count * key))]
+        return ("\(back)\(connector)\(key.values[scratch]!) ", backCalls)
+    case .one:
+        return ("\(accumulator)\(key.values[scratch]!) ", backCalls)
+    case .ten:
+        let count = (scratch - (scratch % rawKey)) / rawKey
+        let newNum = [(scratch - (count * rawKey))]
         let newAccum: String
-        if calls.subtracting([1, 10]).isEmpty {
-            newAccum = "\(accumulator)\(lookup[key]![count]!)-"
+        if calls.subtracting([.one, .ten]).isEmpty {
+            newAccum = "\(accumulator)\(key.values[count]!)-"
         } else {
             let string = accumulator.trimmingCharacters(in: [" "])
-            newAccum = "\(string)\(connector)\(lookup[key]![count]!)-"
+            newAccum = "\(string)\(connector)\(key.values[count]!)-"
         }
         return extract(number: newNum, connector: connector, accumulator: newAccum, calls: [])
-    case 100:
-        let count = (scratch - (scratch % key)) / key
-        let newNum = [(scratch - (count * key))]
+    case .hundred:
+        let count = (scratch - (scratch % rawKey)) / rawKey
+        let newNum = [(scratch - (count * rawKey))]
         var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(lookup[10]![10]!)
+        newString.append(Spot.hundred.values[0]!)
         newString.append(" ")
         return extract(number: newNum, connector: connector, accumulator: newString, calls: backCalls)
-    case 1000:
+    case .thousand:
         let divModResult = (scratch.placeWidth() - 1).divMod(3)
         let chunk = Int(exactly: pow(base: 10, exponent: divModResult.quotient * 3))!
         let count = (scratch - (scratch % chunk)) / chunk
         let newNumber = [scratch - (chunk * count)]
         var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(lookup[1000]![divModResult.quotient]!)
+        newString.append(Spot.thousand.values[divModResult.quotient]!)
         newString.append(" ")
         return extract(number: newNumber, connector: connector, accumulator: newString, calls: backCalls)
-    default:
-        fatalError("Unexpected key")
-    }
-}
-
-
-func keyToUse(_ input: Int) -> Int? {
-    switch input {
-    case 0...19:
-        return 1
-    case 20...99:
-        return 10
-    case 100...999:
-        return 100
-    default:
-        if input >= 1000 && Double(input) <= 0.1 * pow(base: 10, exponent: (1 + (lookup[1000]!.count * 3))) {
-            return 1000
-        } else {
-            return nil
-        }
     }
 }
 

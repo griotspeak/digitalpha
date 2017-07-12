@@ -68,20 +68,19 @@ var lookup: [Int:[String?]] {
              "vigintillion"]]
 }
 
-
-func extract(number: [Int], connector: String, accumulator: String, calls: inout Set<Int>) -> String {
+func extract(number: [Int], connector: String, accumulator: String, calls: Set<Int>) -> (value: String, calls: Set<Int>) {
     let scratch = number[0]
     let key = keyToUse(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
-    calls.formUnion([key])
+    let backCalls = calls.union([key])
 
     switch key {
     case 1 where accumulator.isEmpty == false && scratch == 0:
-        return accumulator.trimmingCharacters(in: [" ", "-"]) + " "
-    case 1 where calls.subtracting([1, 10]).isEmpty == false:
+        return (accumulator.trimmingCharacters(in: [" ", "-"]) + " ", backCalls)
+    case 1 where backCalls.subtracting([1, 10]).isEmpty == false:
         let back = accumulator.trimmingCharacters(in: [" "])
-        return "\(back)\(connector)\(lookup[key]![scratch]!) "
+        return ("\(back)\(connector)\(lookup[key]![scratch]!) ", backCalls)
     case 1:
-        return "\(accumulator)\(lookup[key]![scratch]!) "
+        return ("\(accumulator)\(lookup[key]![scratch]!) ", backCalls)
     case 10:
         let count = (scratch - (scratch % key)) / key
         let newNum = [(scratch - (count * key))]
@@ -92,28 +91,25 @@ func extract(number: [Int], connector: String, accumulator: String, calls: inout
             let string = accumulator.trimmingCharacters(in: [" "])
             newAccum = "\(string)\(connector)\(lookup[key]![count]!)-"
         }
-        var _calls = Set<Int>()
-        return extract(number: newNum, connector: connector, accumulator: newAccum, calls: &_calls)
+        return extract(number: newNum, connector: connector, accumulator: newAccum, calls: [])
     case 100:
         let count = (scratch - (scratch % key)) / key
         let newNum = [(scratch - (count * key))]
-        var _calls = Set<Int>()
-        var newString = extract(number: [count], connector: connector, accumulator: accumulator, calls: &_calls)
+        var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
         newString.append(lookup[10]![10]!)
         newString.append(" ")
-        return extract(number: newNum, connector: connector, accumulator: newString, calls: &calls)
+        return extract(number: newNum, connector: connector, accumulator: newString, calls: backCalls)
     case 1000:
         let divModResult = (scratch.placeWidth() - 1).divMod(3)
         let chunk = Int(exactly: pow(base: 10, exponent: divModResult.quotient * 3))!
         let count = (scratch - (scratch % chunk)) / chunk
         let newNumber = [scratch - (chunk * count)]
-        var _calls = Set<Int>()
-        var newString = extract(number: [count], connector: connector, accumulator: accumulator, calls: &_calls)
+        var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
         newString.append(lookup[1000]![divModResult.quotient]!)
         newString.append(" ")
-        return extract(number: newNumber, connector: connector, accumulator: newString, calls: &calls)
+        return extract(number: newNumber, connector: connector, accumulator: newString, calls: backCalls)
     default:
-        return "WAT????????????????????"
+        fatalError("Unexpected key")
     }
 }
 
@@ -154,8 +150,7 @@ extension Int {
             return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
         }
 
-        var _calls = Set<Int>()
-        return extract(number: [self], connector: specialConnector, accumulator: "", calls: &_calls).trimmingCharacters(in: [" "])
+        return extract(number: [self], connector: specialConnector, accumulator: "", calls: []).value.trimmingCharacters(in: [" "])
     }
 
     public func ordinalString() -> String {

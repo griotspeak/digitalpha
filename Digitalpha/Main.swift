@@ -30,7 +30,11 @@ enum Spot {
         }
     }
 
-    var values: [String?] {
+    subscript (_ index: Int) -> String {
+        return values[index]!
+    }
+
+    private var values: [String?] {
         switch self {
         case .one:
             return ["zero",
@@ -117,25 +121,25 @@ func extract(number: [Int], connector: String, accumulator: String, calls: Set<S
         return (accumulator.trimmingCharacters(in: [" ", "-"]) + " ", backCalls)
     case .one where backCalls.subtracting([.one, .ten]).isEmpty == false:
         let back = accumulator.trimmingCharacters(in: [" "])
-        return ("\(back)\(connector)\(key.values[scratch]!) ", backCalls)
+        return ("\(back)\(connector)\(key[scratch]) ", backCalls)
     case .one:
-        return ("\(accumulator)\(key.values[scratch]!) ", backCalls)
+        return ("\(accumulator)\(key[scratch]) ", backCalls)
     case .ten:
         let count = (scratch - (scratch % rawKey)) / rawKey
         let newNum = [(scratch - (count * rawKey))]
         let newAccum: String
         if calls.subtracting([.one, .ten]).isEmpty {
-            newAccum = "\(accumulator)\(key.values[count]!)-"
+            newAccum = "\(accumulator)\(key[count])-"
         } else {
             let string = accumulator.trimmingCharacters(in: [" "])
-            newAccum = "\(string)\(connector)\(key.values[count]!)-"
+            newAccum = "\(string)\(connector)\(key[count])-"
         }
         return extract(number: newNum, connector: connector, accumulator: newAccum, calls: [])
     case .hundred:
         let count = (scratch - (scratch % rawKey)) / rawKey
         let newNum = [(scratch - (count * rawKey))]
         var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(Spot.hundred.values[0]!)
+        newString.append(Spot.hundred[0])
         newString.append(" ")
         return extract(number: newNum, connector: connector, accumulator: newString, calls: backCalls)
     case .thousand:
@@ -144,7 +148,7 @@ func extract(number: [Int], connector: String, accumulator: String, calls: Set<S
         let count = (scratch - (scratch % chunk)) / chunk
         let newNumber = [scratch - (chunk * count)]
         var newString: String = extract(number: [count], connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(Spot.thousand.values[divModResult.quotient]!)
+        newString.append(Spot.thousand[divModResult.quotient])
         newString.append(" ")
         return extract(number: newNumber, connector: connector, accumulator: newString, calls: backCalls)
     }

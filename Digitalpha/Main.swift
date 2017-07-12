@@ -216,7 +216,7 @@ extension Int {
         let source = cardinalStringSpelledOut()
         let comps = source.components(separatedBy: specialConnector).flatMap { $0.components(separatedBy: "-") }
         guard let tail = comps.last else {
-            fatalError("splitting string faild. Array shouldn't be empty even when separator is not present.")
+            fatalError("splitting string failed. Array shouldn't be empty even when separator is not present.")
         }
 
         switch tail {

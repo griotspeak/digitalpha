@@ -179,6 +179,56 @@ extension Int {
         }
     }
 
+    public func ordinalStringSpelledOut(firstConnector: String = " ") -> String {
+        var source = cardinalStringSpelledOut()
+        let comps = source.components(separatedBy: firstConnector).flatMap { $0.components(separatedBy: "-") }
+
+        let tail = comps.last!
+        source = source.chomp(tail)
+
+        switch tail {
+        case "one":
+            source.append("first")
+        case "two":
+            source.append("second")
+        case "three":
+            source.append("third")
+        case "five":
+            source.append("fifth")
+        case "twelve":
+            source.append("twelfth")
+        default:
+            let shouldDropLast: Bool
+            let newTail: String
+
+            switch tail.characters.last! {
+            case "y":
+                shouldDropLast = true
+                newTail = "ieth"
+            case "t":
+                shouldDropLast = false
+                newTail = "h"
+            case "e":
+                shouldDropLast = true
+                newTail = "th"
+            case _:
+                shouldDropLast = false
+                newTail = "th"
+            }
+
+            if shouldDropLast {
+                source.append(tail.substring(to: tail.index(before: tail.endIndex)))
+            } else {
+                source.append(tail)
+            }
+
+            source.append(newTail)
+        }
+
+        return source
+
+    }
+
     internal func divMod(_ other: Int) -> (quotient: Int, modulus: Int) {
         let quotient = self / other
         let remainder = self % other
@@ -209,6 +259,24 @@ extension Int {
         }
 
         return back
+    }
+}
+
+extension String {
+    func chomp(_ substring: String) -> String {
+        let starts: [CharacterView.Index] = characters.indices.reduce([]) { (accum, element) in
+            if self.substring(from: element).hasPrefix(substring) {
+                return accum + [element]
+            } else {
+                return accum
+            }
+        }
+
+        if let lastStart = starts.last {
+            return self.substring(to: lastStart)
+        } else {
+            return self
+        }
     }
 }
 

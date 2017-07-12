@@ -173,23 +173,22 @@ extension Int {
     }
 
     public func ordinalStringSpelledOut(specialConnector: String = " ") -> String {
-        var source = cardinalStringSpelledOut()
+        let source = cardinalStringSpelledOut()
         let comps = source.components(separatedBy: specialConnector).flatMap { $0.components(separatedBy: "-") }
 
         let tail = comps.last!
-        source = source.chomp(tail)
 
         switch tail {
         case "one":
-            source.append("first")
+            return source.chomp(tail) + "first"
         case "two":
-            source.append("second")
+            return source.chomp(tail) + "second"
         case "three":
-            source.append("third")
+            return source.chomp(tail) + "third"
         case "five":
-            source.append("fifth")
+            return source.chomp(tail) + "fifth"
         case "twelve":
-            source.append("twelfth")
+            return source.chomp(tail) + "twelfth"
         default:
             let shouldDropLast: Bool
             let newTail: String
@@ -210,16 +209,11 @@ extension Int {
             }
 
             if shouldDropLast {
-                source.append(tail.substring(to: tail.index(before: tail.endIndex)))
+                return source.chomp(tail) + tail.substring(to: tail.index(before: tail.endIndex)) + newTail
             } else {
-                source.append(tail)
+                return source + newTail
             }
-
-            source.append(newTail)
         }
-
-        return source
-
     }
 
     internal func divMod(_ other: Int) -> (quotient: Int, modulus: Int) {

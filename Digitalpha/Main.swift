@@ -151,13 +151,13 @@ func pow(base: Int, exponent: Int) -> Double {
 extension Int {
 
 
-    public func cardinalStringSpelledOut(firstConnector: String = " ") -> String {
+    public func cardinalStringSpelledOut(specialConnector: String = " ") -> String {
         guard self >= 0 else {
-            return "negative \((-self).cardinalStringSpelledOut(firstConnector:firstConnector))"
+            return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
         }
 
         var _calls = Set<Int>()
-        return extract(number: [self], connector: firstConnector, accumulator: "", calls: &_calls).trimmingCharacters(in: [" "])
+        return extract(number: [self], connector: specialConnector, accumulator: "", calls: &_calls).trimmingCharacters(in: [" "])
     }
 
     public func ordinalString() -> String {
@@ -179,9 +179,9 @@ extension Int {
         }
     }
 
-    public func ordinalStringSpelledOut(firstConnector: String = " ") -> String {
+    public func ordinalStringSpelledOut(specialConnector: String = " ") -> String {
         var source = cardinalStringSpelledOut()
-        let comps = source.components(separatedBy: firstConnector).flatMap { $0.components(separatedBy: "-") }
+        let comps = source.components(separatedBy: specialConnector).flatMap { $0.components(separatedBy: "-") }
 
         let tail = comps.last!
         source = source.chomp(tail)
@@ -327,4 +327,4 @@ extension String {
 //1.cardinalStringSpelledOut()
 //2.cardinalStringSpelledOut()
 //
-//412.cardinalStringSpelledOut(firstConnector: " and ")
+//412.cardinalStringSpelledOut(specialConnector: " and ")

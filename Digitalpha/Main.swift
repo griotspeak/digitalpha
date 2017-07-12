@@ -237,15 +237,16 @@ extension Int {
     }
 
     func placeWidth(radix: Int = 10) -> Int {
-        var back = 1
-        var value = abs(self)
+        func _doIt(accumulated: Int, radix: Int = 10, depth: Int) -> (depth: Int, accumulated: Int) {
+            if accumulated < radix {
+                return (depth + 1, 0)
+            }
 
-        while value >= radix {
-            back += 1
-            value = (value - (value % radix)) / radix
+            let back = (accumulated - (accumulated % radix)) / radix
+            return _doIt(accumulated: back, radix: radix, depth: depth + 1)
         }
 
-        return back
+        return _doIt(accumulated: self, radix: radix, depth: 0).depth
     }
 }
 
@@ -266,52 +267,3 @@ extension String {
         }
     }
 }
-
-
-
-//
-//0.ordinalString()
-//1.ordinalString()
-//2.ordinalString()
-//3.ordinalString()
-//4.ordinalString()
-//5.ordinalString()
-//6.ordinalString()
-//7.ordinalString()
-//8.ordinalString()
-//9.ordinalString()
-//10.ordinalString()
-//11.ordinalString()
-//12.ordinalString()
-//13.ordinalString()
-//14.ordinalString()
-//15.ordinalString()
-//16.ordinalString()
-//17.ordinalString()
-//18.ordinalString()
-//19.ordinalString()
-//20.ordinalString()
-//21.ordinalString()
-//22.ordinalString()
-//23.ordinalString()
-//24.ordinalString()
-//25.ordinalString()
-//26.ordinalString()
-//27.ordinalString()
-//28.ordinalString()
-//29.ordinalString()
-//40.ordinalString()
-//41.ordinalString()
-//42.ordinalString()
-//43.ordinalString()
-//44.ordinalString()
-//45.ordinalString()
-//46.ordinalString()
-//47.ordinalString()
-//48.ordinalString()
-//49.ordinalString()
-//
-//1.cardinalStringSpelledOut()
-//2.cardinalStringSpelledOut()
-//
-//412.cardinalStringSpelledOut(specialConnector: " and ")

@@ -110,7 +110,7 @@ enum Spot {
     }
 }
 
-func extract(scratch: Int, connector: String, accumulator: String, calls: Set<Spot>) -> (value: String, calls: Set<Spot>) {
+func cardinalAppend(scratch: Int, connector: String, accumulator: String, calls: Set<Spot>) -> (value: String, calls: Set<Spot>) {
     let key = Spot(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
     let rawKey = key.rawValue
     let backCalls = calls.union([key])
@@ -133,23 +133,23 @@ func extract(scratch: Int, connector: String, accumulator: String, calls: Set<Sp
             let string = accumulator.trimmingCharacters(in: [" "])
             newAccum = "\(string)\(connector)\(key[count])-"
         }
-        return extract(scratch: newNum, connector: connector, accumulator: newAccum, calls: [])
+        return cardinalAppend(scratch: newNum, connector: connector, accumulator: newAccum, calls: [])
     case .hundred:
         let count = (scratch - (scratch % rawKey)) / rawKey
         let newNum = (scratch - (count * rawKey))
-        var newString: String = extract(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
+        var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
         newString.append(Spot.hundred[0])
         newString.append(" ")
-        return extract(scratch: newNum, connector: connector, accumulator: newString, calls: backCalls)
+        return cardinalAppend(scratch: newNum, connector: connector, accumulator: newString, calls: backCalls)
     case .thousand:
         let divModResult = (scratch.placeWidth() - 1).divMod(3)
         let chunk = Int(exactly: pow(base: 10, exponent: divModResult.quotient * 3))!
         let count = (scratch - (scratch % chunk)) / chunk
         let newNumber = scratch - (chunk * count)
-        var newString: String = extract(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
+        var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
         newString.append(Spot.thousand[divModResult.quotient])
         newString.append(" ")
-        return extract(scratch: newNumber, connector: connector, accumulator: newString, calls: backCalls)
+        return cardinalAppend(scratch: newNumber, connector: connector, accumulator: newString, calls: backCalls)
     }
 }
 
@@ -172,7 +172,7 @@ extension Int {
             return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
         }
 
-        return extract(scratch: self, connector: specialConnector, accumulator: "", calls: []).value.trimmingCharacters(in: [" "])
+        return cardinalAppend(scratch: self, connector: specialConnector, accumulator: "", calls: []).value.trimmingCharacters(in: [" "])
     }
 
     public func ordinalString() -> String {

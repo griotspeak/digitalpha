@@ -130,49 +130,6 @@ enum Spot {
     }
 }
 
-func cardinalAppend(scratch: Int, connector: String, accumulator: String, calls: Set<Spot>) -> (value: String, calls: Set<Spot>) {
-    let key = Spot(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
-    let rawKey = key.rawValue
-    let backCalls = calls.union([key])
-
-    switch key {
-    case .one where accumulator.isEmpty == false && scratch == 0:
-        return (accumulator.trimmingCharacters(in: [" ", "-"]) + " ", backCalls)
-    case .one where backCalls.subtracting([.one, .ten]).isEmpty == false:
-        let back = accumulator.trimmingCharacters(in: [" "])
-        return ("\(back)\(connector)\(key[scratch]) ", backCalls)
-    case .one:
-        return ("\(accumulator)\(key[scratch]) ", backCalls)
-    case .ten:
-        let count = (scratch - (scratch % rawKey)) / rawKey
-        let newNum = (scratch - (count * rawKey))
-        let newAccum: String
-        if calls.subtracting([.one, .ten]).isEmpty {
-            newAccum = "\(accumulator)\(key[count])-"
-        } else {
-            let string = accumulator.trimmingCharacters(in: [" "])
-            newAccum = "\(string)\(connector)\(key[count])-"
-        }
-        return cardinalAppend(scratch: newNum, connector: connector, accumulator: newAccum, calls: [])
-    case .hundred:
-        let count = (scratch - (scratch % rawKey)) / rawKey
-        let newNum = (scratch - (count * rawKey))
-        var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(Spot.hundred[0])
-        newString.append(" ")
-        return cardinalAppend(scratch: newNum, connector: connector, accumulator: newString, calls: backCalls)
-    case .thousand:
-        let divModResult = (scratch.placeWidth() - 1).divMod(3)
-        let chunk = Int(exactly: pow(base: 10, exponent: divModResult.quotient * 3))!
-        let count = (scratch - (scratch % chunk)) / chunk
-        let newNumber = scratch - (chunk * count)
-        var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
-        newString.append(Spot.thousand[divModResult.quotient])
-        newString.append(" ")
-        return cardinalAppend(scratch: newNumber, connector: connector, accumulator: newString, calls: backCalls)
-    }
-}
-
 func pow(base: Int, exponent: Int) -> Double {
     precondition(exponent >= 0, "exponent must not be negative")
     switch exponent {
@@ -184,10 +141,54 @@ func pow(base: Int, exponent: Int) -> Double {
         return Double(Array(repeating: Double(base), count: exponent).reduce(1, *))
     }
 }
+
 extension Int {
     public func cardinalStringSpelledOut(specialConnector: String = " ") -> String {
         guard self >= 0 else {
             return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
+        }
+
+        func cardinalAppend(scratch: Int, connector: String, accumulator: String, calls: Set<Spot>) -> (value: String, calls: Set<Spot>) {
+            let key = Spot(scratch)! /* TODO: when does this crash? Does it? Can types help?  h 2017-07-09 */
+            let rawKey = key.rawValue
+            let backCalls = calls.union([key])
+
+            switch key {
+            case .one where accumulator.isEmpty == false && scratch == 0:
+                return (accumulator.trimmingCharacters(in: [" ", "-"]) + " ", backCalls)
+            case .one where backCalls.subtracting([.one, .ten]).isEmpty == false:
+                let back = accumulator.trimmingCharacters(in: [" "])
+                return ("\(back)\(connector)\(key[scratch]) ", backCalls)
+            case .one:
+                return ("\(accumulator)\(key[scratch]) ", backCalls)
+            case .ten:
+                let count = (scratch - (scratch % rawKey)) / rawKey
+                let newNum = (scratch - (count * rawKey))
+                let newAccum: String
+                if calls.subtracting([.one, .ten]).isEmpty {
+                    newAccum = "\(accumulator)\(key[count])-"
+                } else {
+                    let string = accumulator.trimmingCharacters(in: [" "])
+                    newAccum = "\(string)\(connector)\(key[count])-"
+                }
+                return cardinalAppend(scratch: newNum, connector: connector, accumulator: newAccum, calls: [])
+            case .hundred:
+                let count = (scratch - (scratch % rawKey)) / rawKey
+                let newNum = (scratch - (count * rawKey))
+                var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
+                newString.append(Spot.hundred[0])
+                newString.append(" ")
+                return cardinalAppend(scratch: newNum, connector: connector, accumulator: newString, calls: backCalls)
+            case .thousand:
+                let divModResult = (scratch.placeWidth() - 1).divMod(3)
+                let chunk = Int(exactly: pow(base: 10, exponent: divModResult.quotient * 3))!
+                let count = (scratch - (scratch % chunk)) / chunk
+                let newNumber = scratch - (chunk * count)
+                var newString: String = cardinalAppend(scratch: count, connector: connector, accumulator: accumulator, calls: []).value
+                newString.append(Spot.thousand[divModResult.quotient])
+                newString.append(" ")
+                return cardinalAppend(scratch: newNumber, connector: connector, accumulator: newString, calls: backCalls)
+            }
         }
 
         return cardinalAppend(scratch: self, connector: specialConnector, accumulator: "", calls: []).value.trimmingCharacters(in: [" "])

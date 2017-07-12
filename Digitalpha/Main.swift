@@ -92,7 +92,27 @@ enum Spot {
                     "septendecillion",
                     "octodecillion",
                     "novemdecillion",
-                    "vigintillion"]
+                    "vigintillion",
+                    "unvigintillion",
+                    "duovigintillion",
+                    "tresvigintillion",
+                    "quattuorvigintillion",
+                    "quinquavigintillion",
+                    "sesvigintillion",
+                    "septemvigintillion",
+                    "octovigintillion",
+                    "novemvigintillion",
+                    "trigintillion",
+                    "untrigintillion",
+                    "duotrigintillion",
+                    "trestrigintillion",
+                    "quattuortrigintillion",
+                    "quinquatrigintillion",
+                    "sestrigintillion",
+                    "septentrigintillion",
+                    "octotrigintillion",
+                    "noventrigintillion",
+                    "quadragintillion"]
         }
     }
 
@@ -165,8 +185,6 @@ func pow(base: Int, exponent: Int) -> Double {
     }
 }
 extension Int {
-
-
     public func cardinalStringSpelledOut(specialConnector: String = " ") -> String {
         guard self >= 0 else {
             return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
@@ -274,7 +292,7 @@ extension Int {
 }
 
 extension String {
-    func chomp(_ substring: String) -> String {
+    fileprivate func chomp(_ substring: String) -> String {
         let starts: [CharacterView.Index] = characters.indices.reduce([]) { (accum, element) in
             if self.substring(from: element).hasPrefix(substring) {
                 return accum + [element]

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-enum Spot {
+private enum Spot {
     case one
     case ten
     case hundred
@@ -143,7 +143,33 @@ func pow(base: Int, exponent: Int) -> Double {
 }
 
 extension Int {
-    public func cardinalStringSpelledOut(specialConnector: String = " ") -> String {
+    public enum BaseStringFormat {
+        public enum UseCase {
+            case cardinal
+            case ordinal
+        }
+
+        case spelledOutEnglish(UseCase, specialConnector: String?)
+        case arabicNumerals(UseCase)
+
+        static let defaultSpecialConnector: String = " "
+    }
+
+
+    public func described(format: BaseStringFormat) -> String {
+        switch format {
+        case .arabicNumerals(.ordinal):
+            return ordinalString()
+        case .arabicNumerals(.cardinal):
+            return cardinalStringSpelledOut()
+        case .spelledOutEnglish(.ordinal, let specialConnector):
+            return ordinalStringSpelledOut(specialConnector: specialConnector ?? BaseStringFormat.defaultSpecialConnector)
+        case .spelledOutEnglish(.cardinal, let specialConnector):
+            return cardinalStringSpelledOut(specialConnector: specialConnector ?? BaseStringFormat.defaultSpecialConnector)
+        }
+    }
+
+    private func cardinalStringSpelledOut(specialConnector: String = " ") -> String {
         guard self >= 0 else {
             return "negative \((-self).cardinalStringSpelledOut(specialConnector:specialConnector))"
         }
@@ -194,7 +220,7 @@ extension Int {
         return cardinalAppend(scratch: self, connector: specialConnector, accumulator: "", calls: []).value.trimmingCharacters(in: [" "])
     }
 
-    public func ordinalString() -> String {
+    private func ordinalString() -> String {
         let selfString = String(self)
 
         if (10...20 ~= (abs(self) % 100)) {
@@ -213,7 +239,7 @@ extension Int {
         }
     }
 
-    public func ordinalStringSpelledOut(specialConnector: String = " ") -> String {
+    private func ordinalStringSpelledOut(specialConnector: String = " ") -> String {
         let source = cardinalStringSpelledOut()
         let comps = source.components(separatedBy: specialConnector).flatMap { $0.components(separatedBy: "-") }
         guard let tail = comps.last else {
@@ -258,7 +284,7 @@ extension Int {
         }
     }
 
-    internal func divMod(_ other: Int) -> (quotient: Int, modulus: Int) {
+    private func divMod(_ other: Int) -> (quotient: Int, modulus: Int) {
         let quotient = self / other
         let remainder = self % other
 
@@ -278,7 +304,7 @@ extension Int {
         }
     }
 
-    func placeWidth(radix: Int = 10) -> Int {
+    private func placeWidth(radix: Int = 10) -> Int {
         func _doIt(accumulated: Int, radix: Int = 10, depth: Int) -> (depth: Int, accumulated: Int) {
             if accumulated < radix {
                 return (depth + 1, 0)

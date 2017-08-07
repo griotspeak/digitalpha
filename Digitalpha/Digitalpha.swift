@@ -248,15 +248,15 @@ extension Int {
 
         switch tail {
         case "one":
-            return source.chomp(tail) + "first"
+            return (source.consuming(suffix: tail) ?? source) + "first"
         case "two":
-            return source.chomp(tail) + "second"
+            return (source.consuming(suffix: tail) ?? source) + "second"
         case "three":
-            return source.chomp(tail) + "third"
+            return (source.consuming(suffix: tail) ?? source) + "third"
         case "five":
-            return source.chomp(tail) + "fifth"
+            return (source.consuming(suffix: tail) ?? source) + "fifth"
         case "twelve":
-            return source.chomp(tail) + "twelfth"
+            return (source.consuming(suffix: tail) ?? source) + "twelfth"
         default:
             let shouldDropLast: Bool
             let newTail: String
@@ -277,7 +277,8 @@ extension Int {
             }
 
             if shouldDropLast {
-                return source.chomp(tail) + tail.substring(to: tail.index(before: tail.endIndex)) + newTail
+
+                return (source.consuming(suffix: tail) ?? source) + tail.substring(to: tail.index(before: tail.endIndex)) + newTail
             } else {
                 return source + newTail
             }
@@ -319,9 +320,9 @@ extension Int {
 }
 
 extension String {
-    fileprivate func chomp(_ substring: String) -> String {
+    fileprivate func consuming(suffix: String) -> String? {
         let starts: [CharacterView.Index] = characters.indices.reduce([]) { (accum, element) in
-            if self.substring(from: element).hasPrefix(substring) {
+            if self.substring(from: element).hasPrefix(suffix) {
                 return accum + [element]
             } else {
                 return accum
@@ -331,7 +332,7 @@ extension String {
         if let lastStart = starts.last {
             return self.substring(to: lastStart)
         } else {
-            return self
+            return nil
         }
     }
 }
